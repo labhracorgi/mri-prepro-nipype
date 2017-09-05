@@ -60,8 +60,5 @@ matlabbatch{1}.spm.spatial.preproc.warp.write = [0 0];
 
 spm_jobman('run', matlabbatch);
 
-
-
-
 end
 
