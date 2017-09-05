@@ -9,14 +9,14 @@ File to append every "snrcnr.txt" to one large matrix/dataframe.
 Any large changes to main_flow.py and sub_flow.py may cause this script to not
 function as desired.
 
-@author: L
+@author: lars
 """
 
 
 ##Directories which should be equal to the values in main_flow.py and sub_flow.py
-working_dir = "/home/user/playground/real/"
-output_dir = "/home/user/playground/real/output/"
-input_dir = "/home/user/playground/sampledata/"
+working_dir = "/home/lars/playground/real/"
+output_dir = "/home/lars/playground/real/output/"
+input_dir = "/home/lars/playground/sampledata/"
 
 #Unique for this script
 snr_dir = output_dir + "nii/"
