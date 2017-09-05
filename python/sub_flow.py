@@ -14,7 +14,7 @@ to perform the multimodal SPM segmentation algorithm.
 Any remaining skullstripping or so should be possible to perform in this 
 workflow.
 
-@author: lars
+@author: L
 """
 
 from nipype import Node, Workflow, Function
@@ -26,9 +26,9 @@ from nipype.interfaces.ants.segmentation import N4BiasFieldCorrection
 from nipype.interfaces.fsl import ImageStats, FAST
 
 ##Directories which should be equal to the values in main_flow.py
-working_dir = "/home/lars/playground/real/"
-output_dir = "/home/lars/playground/real/output/"
-input_dir = "/home/lars/playground/sampledata/"
+working_dir = "/home/user/playground/real/"
+output_dir = "/home/user/playground/real/output/"
+input_dir = "/home/user/playground/sampledata/"
 
 
 ##Start below here:
