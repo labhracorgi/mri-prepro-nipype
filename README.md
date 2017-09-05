@@ -2,7 +2,13 @@
 This is a repository for preprocessing MRI images to be used in different types of algorithms for detection of stroke, lesions and types of Circle of Willis (CoW).
 
 # Required software:
-The following stand-alone software packages have been utilized.
+The programming languages that have been used (so far) are:
+- Python
+- Matlab
+- R
+
+
+The following stand-alone neuroimaging software packages have been utilized.
 - Nipype: http://nipy.org/packages/nipype/index.html
 - SPM: http://www.fil.ion.ucl.ac.uk/spm/software/spm12/
 - FSL: https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/
