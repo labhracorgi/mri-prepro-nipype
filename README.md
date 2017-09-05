@@ -22,7 +22,7 @@ or download a collective package.
 
 # How to run the repository code:
 
-- 1: Set the 3 common directories across all python scripts. (See directory descriptions.)
+- 1: Set the 3 common directories across all python scripts. (See directory descriptions in wiki.)
 - 2: Run the "main_flow.py" script for the first level preprocessing.
 - 3: Run the "sub_flow.py" script for the second level preprocessing.
 - 4: Run the "compile_snr_cnr.py" to extract every SNR and CNR value to a single text file which allows easy diagnostics/checking for image outliers.
@@ -33,3 +33,7 @@ or download a collective package.
 # Current issues:
 - Header problems, "sform" is changed somehow ANTS. Possible solution: Copy "qform" and overwrite "sform".
 
+
+
+## Wiki:
+https://github.com/labhracorgi/mri-prepro-nipype/wiki
