@@ -25,7 +25,7 @@ or download a collective package.
 - 1: Set the 3 common directories across all python scripts. (See directory descriptions.)
 - 2: Run the "main_flow.py" script for the first level preprocessing.
 - 3: Run the "sub_flow.py" script for the second level preprocessing.
-- 4: Run the "compile_snr_cnr.py" to extract every SNR and CNR to allow easy diagnostics/check for outliers.
+- 4: Run the "compile_snr_cnr.py" to extract every SNR and CNR value to a single text file which allows easy diagnostics/checking for image outliers.
 
 
 
