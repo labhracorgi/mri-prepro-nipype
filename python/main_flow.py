@@ -14,10 +14,7 @@ from nipype import IdentityInterface, DataGrabber, DataSink
 from nipype.algorithms.misc import Gunzip
 from IPython.display import Image
 import os
-from nipype.interfaces.spm import Coregister, NewSegment
-from nipype.interfaces.fsl.maths import MultiImageMaths, UnaryMaths, ApplyMask
-#from nipype.interfaces.ants.segmentation import BrainExtraction #Må ha versjon 0.13.0
-from nipype.interfaces.fsl.preprocess import BET
+from nipype.interfaces.spm import Coregister
 from nipype.interfaces.base import CommandLine
 
 ###Directories - Hardcoded for this purpose.
@@ -84,7 +81,6 @@ dg.inputs.field_template = {'t1w':'%s/t1w/T1_3D_SAG.nii.gz',
 
 
 ##Part 3.0 - GUNZIP - files->list->unzip->list->files
-
 #Files to list
 def files_to_list(t1w,flair,swi):
     new_list = [t1w,flair,swi]
@@ -148,87 +144,7 @@ coreg_1b.inputs.jobtype = 'estwrite' #Coreg and reslice
 
 ##END Part 4
 
-##Part 5 - NewSegment
-segment = Node(NewSegment(),name='NewSegment_T1')
-segment.inputs.channel_info = (0.001, 60, (False, False))
-
-segment.inputs.affine_regularization = 'mni'
-
-segment.inputs.sampling_distance = float(3)
-segment.inputs.write_deformation_fields = [False,False]
-
-
-#tissueX replicates basic matlab script based on running default Segment in SPM12.
-tissue1 = ((spm_tpm_dir, int(1)), int(1), (True, False), (False, False))
-tissue2 = ((spm_tpm_dir, int(2)), int(1), (True, False), (False, False))
-tissue3 = ((spm_tpm_dir, int(3)), int(2), (True, False), (False, False))
-tissue4 = ((spm_tpm_dir, int(4)), int(3), (True, False), (False, False))
-tissue5 = ((spm_tpm_dir, int(5)), int(4), (True, False), (False, False))
-tissue6 = ((spm_tpm_dir, int(6)), int(2), (False, False), (False, False))
-
-segment.inputs.tissues = [tissue1,tissue2,tissue3,tissue4,tissue5,tissue6]
-#(('TPM.nii', 1), 2, (True,True), (False, False))
-
-
-##END Part 5
-
-##Part 6 - Brain Extract
-
-###SPM extraction by segmentation try.
-#Extract tissues
-def ns_to_extract(new_segment_list):
-    
-    #Extract and Return Values
-    first_tissue = new_segment_list[2][0]
-    string_list = [new_segment_list[0][0], new_segment_list[1][0]]#, new_segment_list[3][0]]
-    return(first_tissue,string_list)
-
-pre_extract = Node(Function(input_names = ['new_segment_list'],
-                            output_names = ['first_tissue','string_list'],
-                                function = ns_to_extract),name='PreFSL_TissueExtract')
-
-#Merge Mask
-be_fsl = Node(MultiImageMaths(),name='Merge_Tissues_to_Mask')
-
-#This string requires 2 other images in addition to the input
-be_fsl.inputs.op_string = "-thr 0.10 -add %s -add %s -thr 0.05 -bin"
-#add 1,2,3 "-add %s -add %s -thr 0.01"
-#add 2,3 sub 4 "-add %s -add %s -sub %s -thr 0.01"
-#add 2 "-add %s -thr 0.01"
-
-#Fill mask
-
-fill_holes = Node(UnaryMaths(),name = 'Fill_Holes_In_Mask')
-fill_holes.inputs.operation = 'fillh'
-
-#Apply mask
-do_mask_t1 = Node(ApplyMask(),name = 'ApplySegMask_T1')
-do_mask_t2 = Node(ApplyMask(),name = 'ApplySegMask_T2')
-do_mask_swi = Node(ApplyMask(),name = 'ApplySegMask_SWI')
-###END SPM extraction by segmentation try.
-
-###ANTS extraction try. Require 0.13.0 Nipype
-
-#extract_ants = Node(BrainExtraction(),name = "ANTs_BE")
-
-#extract_ants.inputs.dimension = 3
-#extract_ants.inputs.brain_template = ants_template_dir + "T_template0.nii.gz"
-#extract_ants.inputs.brain_probability_mask = ants_template_dir + "T_template0_BrainCerebellumProbabilityMask.nii.gz"
-#extract_ants.inputs.extraction_registration_mask = ants_template_dir + "T_template0_BrainCerebellumExtractionMask.nii.gz"
-
-###END ANTS extraction try
-
-###FSL extraction try.
-extract_fsl = Node(BET(),name = "FSL_BE")
-#extract_fsl.inputs.remove_eyes = True
-extract_fsl.inputs.robust = True
-extract_fsl.inputs.mask = True
-extract_fsl.inputs.no_output = False
-
-###END FSL extraction try.
-
-##END Part 6
-
+##Part 5 - MySegment Multimodal
 ###Multimodal SPM segment extraction.
 
 def ready_string_to_shell(t1path,t2path):
@@ -249,17 +165,16 @@ call_to_CL = Node(CommandLine(command = 'matlab -nojvm -nosplash -singleCompThre
 tissue_grab = Node(DataGrabber(),name="GrabTissuesPerSubject")
 
 
-###END Multimodal SPM segment extraction.
+###END Part 5 -
 
-##Last Part - DataSink
+##Last Part 6 - DataSink
 datasink = Node(DataSink(),name = 'Clean_Up_w_DataSink')
 datasink.inputs.base_directory = output_dir
 datasink.inputs.substitutions = substitutions_sink
 
-##END Last Part
+##END Last Part 6
 
 ####END Nodes
-
 
 
 ####WorkFlow
@@ -302,39 +217,6 @@ prepro_flow.connect(coreg_1,'coregistered_source',coreg_1a,'target')
 prepro_flow.connect(rc2_node,'mod_swi',coreg_1b,'source')
 prepro_flow.connect(coreg_1,'coregistered_source',coreg_1b,'target')
 
-
-#Corrected T1 (from coreg_1) to NewSegment
-#prepro_flow.connect(coreg_1,'coregistered_source',segment,'channel_files')
-
-#NewSegment to PreFSL_TissueExtract
-#prepro_flow.connect(segment,'native_class_images',pre_extract,'new_segment_list')
-
-#PreFSL_BE to Merge_Tissues_to_Mask
-#prepro_flow.connect(pre_extract,'first_tissue',be_fsl,'in_file')
-#prepro_flow.connect(pre_extract,'string_list',be_fsl,'operand_files')
-
-#Merge_Tissues_to_Mask to Fill_Holes_In_Mask
-#prepro_flow.connect(be_fsl,'out_file',fill_holes,'in_file')
-
-#Fill_Holes_In_Mask to ApplySegMask
-#prepro_flow.connect(coreg_1,'coregistered_source',do_mask_t1,'in_file')
-#prepro_flow.connect(fill_holes,'out_file',do_mask_t1,'mask_file')
-
-
-##Needs to be resliced!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-#prepro_flow.connect(coreg_1a,'coregistered_source',do_mask_t2,'in_file')
-#prepro_flow.connect(fill_holes,'out_file',do_mask_t2,'mask_file')
-
-#prepro_flow.connect(coreg_1b,'coregistered_source',do_mask_swi,'in_file')
-#prepro_flow.connect(fill_holes,'out_file',do_mask_swi,'mask_file')
-
-#BrainExtract i ANTS er ikke i nipype 0.11.0
-#T1 to ANTS SS
-#prepro_flow.connect(coreg_1,'coregistered_source',extract_ants,'anatomical_image')
-
-#T1 to FSL SS
-#prepro_flow.connect(coreg_1,'coregistered_source',extract_fsl,'in_file')
-
 #Coreg_1 to Ready_string
 prepro_flow.connect(coreg_1,'coregistered_source',ready_string_to_commandline,'t1path')
 
@@ -349,7 +231,7 @@ prepro_flow.connect(coreg_1,'coregistered_source',datasink,'nii.@t1')
 prepro_flow.connect(coreg_1a,'coregistered_source',datasink,'nii.@t2')
 prepro_flow.connect(coreg_1b,'coregistered_source',datasink,'nii.@swi')
 
-#Visualize.
+#Visualize whole WorkFlow.
 new_dot =  output_dir + "prepro_flow_graph.dot"
 new_dot_png = new_dot + ".png"
 prepro_flow.write_graph(graph2use='orig',dotfilename=new_dot)
