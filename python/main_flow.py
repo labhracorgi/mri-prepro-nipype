@@ -6,7 +6,7 @@ WorkFlow PreProc Data
 
 Workflow for coregistering and for performing multimodal segmentation.
 
-@author: L
+@author: lars
 """
 
 from nipype import Node, MapNode, Workflow, Function
@@ -21,9 +21,9 @@ from nipype.interfaces.fsl.preprocess import BET
 from nipype.interfaces.base import CommandLine
 
 ###Directories - Hardcoded for this purpose.
-working_dir = "/home/user/playground/real/" 
-output_dir = "/home/user/playground/real/output/" 
-input_dir = "/home/user/playground/sampledata/" 
+working_dir = "/home/lars/playground/real/" 
+output_dir = "/home/lars/playground/real/output/" 
+input_dir = "/home/lars/playground/sampledata/" 
 
 ##Recurring directories description:
 #Where we want to store the Workflows
@@ -31,8 +31,8 @@ input_dir = "/home/user/playground/sampledata/"
 #Where our ID/"MRI-images" are.
 
 #SPM directories - Coreg and Segment atlases
-atlas_dir = "/home/user/playground/spm_template/avg152T1.nii"
-spm_tpm_dir = "/home/user/spm12/tpm/TPM.nii"
+atlas_dir = "/home/lars/playground/spm_template/avg152T1.nii"
+spm_tpm_dir = "/home/lars/spm12/tpm/TPM.nii"
 
 
 ###Substitutions
