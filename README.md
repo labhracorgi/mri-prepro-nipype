@@ -1,4 +1,5 @@
 ## Depository name: "mri-prepro-nipype"
+This is a depository for
 
 # Required software:
 The following stand-alone software packages have been utilized.
@@ -7,8 +8,8 @@ The following stand-alone software packages have been utilized.
 - FSL:
 - ANTS:
 
-or download a collective package:
-- 
+or download a collective package.
+- NeuroDebian:
 
 
 
