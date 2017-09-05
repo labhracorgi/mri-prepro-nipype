@@ -1,15 +1,15 @@
 ## Repository name: "mri-prepro-nipype"
-This is a repository for preprocessing MRI images to be used in different types of algorithms for detection stroke, lesions and Circle of Willis.
+This is a repository for preprocessing MRI images to be used in different types of algorithms for detection of stroke, lesions and types of Circle of Willis (CoW).
 
 # Required software:
 The following stand-alone software packages have been utilized.
-- Nipype:
-- SPM:
-- FSL:
-- ANTS:
+- Nipype: http://nipy.org/packages/nipype/index.html
+- SPM: http://www.fil.ion.ucl.ac.uk/spm/software/spm12/
+- FSL: https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/
+- ANTS: http://stnava.github.io/ANTs/
 
 or download a collective package.
-- NeuroDebian:
+- NeuroDebian: http://neuro.debian.net/
 
 
 
