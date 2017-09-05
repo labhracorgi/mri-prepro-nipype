@@ -20,7 +20,7 @@ or download a collective package.
 
 
 
-# How to run the depository code:
+# How to run the repository code:
 
 - 1: Set the 3 common directories across all python scripts. (See directory descriptions.)
 - 2: Run the "main_flow.py" script for the first level preprocessing.
