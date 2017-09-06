@@ -1,6 +1,8 @@
 # Repository name: "mri-prepro-nipype"
 This is a repository for preprocessing MRI images to be used in different types of algorithms for detection of stroke, lesions and types of Circle of Willis (CoW).
 
+(This branch is not to be merged to master until the last step of diagnostics are complete!)
+
 ### Required software:
 The programming languages that have been used (so far) are:
 - Python
@@ -31,7 +33,7 @@ or download a collective package.
 
 
 ### Current issues:
-- Header problems, "sform" is changed somehow ANTS. Possible solution: Copy "qform" and overwrite "sform".
+- None as of now.
 
 
 
