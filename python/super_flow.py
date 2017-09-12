@@ -6,6 +6,8 @@ Collecting all the python scripts together in this script.
 Make sure that the scripts being called upon is in the same directory!
 The common_path may be distinguished from working_dir.
 
+To be regarded as complete.
+
 @author: lars
 """
 
@@ -27,6 +29,7 @@ print("Continue with the sub_flow.py:")
 execfile("sub_flow.py")
 print("Rearrange the SNR/CNR values for diagnostics:")
 execfile("compile_snr_cnr.py")
-
+print("Rearrange the similar value measurements for diagnostics:")
+execfile("compile_similar_values.py")
 
 print("Finished..!")

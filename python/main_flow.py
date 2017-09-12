@@ -6,6 +6,8 @@ WorkFlow PreProc Data
 
 Workflow for coregistering and for performing multimodal segmentation.
 
+To be regarded as complete.
+
 @author: lars
 """
 
@@ -17,10 +19,10 @@ import os
 from nipype.interfaces.spm import Coregister
 from nipype.interfaces.base import CommandLine
 
-###Directories - Hardcoded for this purpose.
-working_dir = "/home/lars/playground/real/" 
-output_dir = "/home/lars/playground/real/output/" 
-input_dir = "/home/lars/playground/sampledata/" 
+###Directories - Hardcoded for this purpose. 
+#working_dir = "/home/lars/playground/real/" 
+#output_dir = "/home/lars/playground/real/output/" 
+#input_dir = "/home/lars/playground/sampledata/" 
 
 ##Recurring directories description:
 #Where we want to store the Workflows
@@ -35,9 +37,9 @@ spm_tpm_dir = "/home/lars/spm12/tpm/TPM.nii"
 ###Substitutions
 substitutions_sink = [('_subject_id_',''),
                       ('_Gunzip','Gunzip'),
-                        ('T1_3D_SAG','T1'),
-                        ('rT2_FLAIR_3D','FLAIR'),
-                        ('rSWI_TRA','SWI')]
+                        ('T1_3D_SAG','T1_re_cor'),
+                        ('rT2_FLAIR_3D','FLAIR_re_cor'),
+                        ('rSWI_TRA','SWI_re_cor')]
 
 ####Nodes
 
@@ -144,7 +146,7 @@ coreg_1b.inputs.jobtype = 'estwrite' #Coreg and reslice
 
 ##END Part 4
 
-##Part 5 - MySegment Multimodal
+##Part 5 - MySegment Multimodal --- Dead End ---
 ###Multimodal SPM segment extraction.
 
 def ready_string_to_shell(t1path,t2path):
@@ -160,19 +162,41 @@ ready_string_to_commandline = Node(Function(input_names = ['t1path','t2path'],
                                             function = ready_string_to_shell),
                                             name = "Collect_T1_T2")
                            
-call_to_CL = Node(CommandLine(command = 'matlab -nojvm -nosplash -singleCompThread -r '),name = "Execute_SPM_Through_Shell")
-
-tissue_grab = Node(DataGrabber(),name="GrabTissuesPerSubject")
-
+call_to_CL = Node(CommandLine(command = 'matlab -nojvm -nosplash -singleCompThread -r '),
+                  name = "Execute_SPM_Through_Shell")
 
 ###END Part 5 -
 
-##Last Part 6 - DataSink
+##Part 6 - MySPMImageSimilarity --- Dead End ---
+
+def ready_string_to_shell_2(t1path,t2path):
+    
+    import os
+    uniq_out_dir = os.getcwd()
+    wd = uniq_out_dir
+    
+    arguement_call = """ "myspm_imageSimilarity """ + t1path + " " + t2path + " " + "nmi" + " " + wd + """; exit;" """
+    
+    collected_string = arguement_call
+    return(collected_string)
+    
+ready_string_to_commandline_2 = Node(Function(input_names = ['t1path','t2path'],
+                                              output_names = ['collected_string'],
+                                                function = ready_string_to_shell_2),
+                                                name = "Collect_T1_T2_WD_metric")
+
+call_to_CL_2 = Node(CommandLine(command = 'matlab -nojvm -nosplash -singleCompThread -r '),
+                    name = "Execute_simQA_Through_Shell")
+
+
+###END Part 6 -
+
+##Last Part 7 - DataSink
 datasink = Node(DataSink(),name = 'Clean_Up_w_DataSink')
 datasink.inputs.base_directory = output_dir
 datasink.inputs.substitutions = substitutions_sink
 
-##END Last Part 6
+##END Last Part 7
 
 ####END Nodes
 
@@ -226,6 +250,16 @@ prepro_flow.connect(coreg_1a,'coregistered_source',ready_string_to_commandline,'
 #Ready_string to Call_to_CL
 prepro_flow.connect(ready_string_to_commandline,'collected_string',call_to_CL,'args')
 
+#Coreg_1 to Ready_string 2
+prepro_flow.connect(coreg_1,'coregistered_source',ready_string_to_commandline_2,'t1path')
+
+#Coreg_1a to Ready_string 2
+prepro_flow.connect(coreg_1a,'coregistered_source',ready_string_to_commandline_2,'t2path')
+
+#Ready_string 2 to Call_to_CL 2
+prepro_flow.connect(ready_string_to_commandline_2,'collected_string',call_to_CL_2,'args')
+
+
 #To Datasink
 prepro_flow.connect(coreg_1,'coregistered_source',datasink,'nii.@t1')
 prepro_flow.connect(coreg_1a,'coregistered_source',datasink,'nii.@t2')
@@ -242,6 +276,6 @@ import time
 
 #Run
 start = time.time()
-res = prepro_flow.run('MultiProc',plugin_args={'n_procs':5})
+res = prepro_flow.run('MultiProc',plugin_args={'n_procs':10})
 end = time.time()
 print(end - start)
