@@ -5,16 +5,15 @@ This is a repository for preprocessing MRI images to be used in different types 
 
 ### Required software:
 The programming languages that have been used (so far) are:
-- Python
-- Matlab
-- R
+- Python (ver. 2.7.9)
+- Matlab (ver. 2015b)
+- R (ver. 3.3.3)
 
 
 The following stand-alone neuroimaging software packages have been utilized.
-- Nipype: http://nipy.org/packages/nipype/index.html
-- SPM: http://www.fil.ion.ucl.ac.uk/spm/software/spm12/
-- FSL: https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/
-- ANTS: http://stnava.github.io/ANTs/
+- Nipype: http://nipy.org/packages/nipype/index.html (ver. 0.11.0)
+- SPM: http://www.fil.ion.ucl.ac.uk/spm/software/spm12/ (ver. 12)
+- FSL: https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/ (ver. 5.0)
 
 or download a collective package.
 - NeuroDebian: http://neuro.debian.net/
