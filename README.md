@@ -39,6 +39,7 @@ Without "super_flow.py":
 - SNR/CNR: Just specify the parameters in the beginning of the "snrcnr_diagnostics.R" and run it.
 - T1 vs T2 --- Similarity measure: A simple histogram should suffice.
 
+##Tested on 5 cases to ensure that the code runs.
 ### Current issues:
 - None as of now.
 
