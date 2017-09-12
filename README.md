@@ -21,7 +21,7 @@ or download a collective package.
 
 
 
-### How to run the repository code:
+### How to run the main repository code: (Excluding diagnostics)
 With "super_flow.py":
 - 1: Set the 3 necessary and common directories (working, input and output) in "super_flow.py".
 - 2: Place every script in the working directory.
@@ -33,6 +33,11 @@ Without "super_flow.py":
 - 3: Run the "sub_flow.py" script for the second level preprocessing.
 - 4: Run the "compile_snr_cnr.py" to extract every SNR and CNR value to a single text file which allows easy diagnostics/checking for image outliers.
 - 5: Run the "compile_similar_values.py" to extract every "nmi"-based similarity measure between T1 and T2 image.
+
+### Diagnostics:
+- Data location: The data should be found in the output directory.
+- SNR/CNR: Just specify the parameters in the beginning of the "snrcnr_diagnostics.R" and run it.
+- T1 vs T2 --- Similarity measure: A simple histogram should suffice.
 
 ### Current issues:
 - None as of now.
