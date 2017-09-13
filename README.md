@@ -3,7 +3,7 @@ This is a repository for preprocessing MRI images to be used in different types 
 
 (This branch is not to be merged to master until the last step of diagnostics are complete!)
 
-### Required software:
+### "Required" software:
 The programming languages that have been used (so far) are:
 - Python (ver. 2.7.9)
 - Matlab (ver. 2015b)
